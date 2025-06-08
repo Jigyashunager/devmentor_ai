@@ -1,41 +1,228 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# DevMentor AI - Root Project .gitignore
+# Project structure: devmentor_ai/devmentor_ai-frontend/ & devmentor_ai/devmentor_ai-backend/
 
-# dependencies
-/node_modules
-/.pnp
-.pnp.*
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/versions
+# Dependencies from both frontend and backend
+**/node_modules/
+**/npm-debug.log*
+**/yarn-debug.log*
+**/yarn-error.log*
+**/pnpm-debug.log*
+**/lerna-debug.log*
 
-# testing
-/coverage
+# Environment variables (NEVER commit these)
+**/.env
+**/.env.local
+**/.env.development.local
+**/.env.test.local
+**/.env.production.local
+**/.env.backup
+.env*
 
-# next.js
-/.next/
-/out/
+# Build outputs
+**/dist/
+**/build/
+**/out/
+**/.next/
+**/coverage/
 
-# production
-/build
+# Database files (SQLite)
+**/*.db
+**/*.db-journal
+**/*.sqlite
+**/*.sqlite3
+**/dev.db*
 
-# misc
-.DS_Store
-*.pem
-
-# debug
+# Logs
+**/*.log
+**/logs/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-.pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
-.env*
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+**/.DS_Store
 
-# vercel
-.vercel
+# IDE and editor files
+.vscode/
+.idea/
+**/.vscode/
+**/.idea/
+*.swp
+*.swo
+*~
+*.sublime-project
+*.sublime-workspace
 
-# typescript
-*.tsbuildinfo
-next-env.d.ts
+# TypeScript
+**/*.tsbuildinfo
+**/next-env.d.ts
+
+# Cache directories
+**/.cache/
+**/.parcel-cache/
+**/.npm/
+**/.eslintcache
+**/.rpt2_cache/
+**/.rts2_cache_cjs/
+**/.rts2_cache_es/
+**/.rts2_cache_umd/
+
+# Deployment platforms
+**/.vercel/
+**/.netlify/
+**/.serverless/
+
+# Testing
+**/test-results/
+**/playwright-report/
+**/playwright/.cache/
+
+# Prisma (database migrations)
+**/prisma/migrations/*/migration.sql
+
+# Package manager files
+**/.yarn/
+**/.pnp.*
+**/yarn-integrity
+
+# Temporary directories
+**/tmp/
+**/temp/
+
+# Runtime data
+**/pids
+**/*.pid
+**/*.seed
+**/*.pid.lock
+
+# Optional REPL history
+**/.node_repl_history
+
+# Output of 'npm pack'
+**/*.tgz
+
+# API keys and certificates (SECURITY)
+**/*.pem
+**/*.key
+**/*.crt
+**/*.p12
+**/*.pfx
+
+# Uploaded files and user content
+**/uploads/
+**/files/
+**/media/
+**/static/uploads/
+
+# Backup files
+**/*.backup
+**/*.bak
+
+# Local development files
+**/.local
+**/local/
+
+# Docker files (if you add Docker later)
+**/.docker/
+**/docker-compose.override.yml
+
+# Documentation build
+**/docs/generated/
+**/docs/build/
+
+# Storybook
+**/.storybook-out/
+**/.out/
+
+# Tailwind CSS
+**/.tailwindcss
+
+# Next.js specific
+**/next-env.d.ts
+**/.next
+
+# React/Next.js
+**/react-app-env.d.ts
+
+# Microbundle cache
+**/.rpt2_cache/
+**/.rts2_cache_cjs/
+**/.rts2_cache_es/
+**/.rts2_cache_umd/
+
+# ESLint cache
+**/.eslintcache
+
+# Stylelint cache
+**/.stylelintcache
+
+# Rush temporary files
+**/common/temp/
+
+# Stores VSCode versions used for testing VSCode extensions
+**/.vscode-test
+
+# Python (if you add Python scripts)
+**/__pycache__/
+**/*.py[cod]
+**/*$py.class
+
+# Jupyter Notebook
+**/.ipynb_checkpoints
+
+# Project-specific ignores
+README-backup.md
+TODO.md
+NOTES.md
+
+# Mac specific
+.AppleDouble
+.LSOverride
+
+# Windows specific
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+
+# Linux specific
+*~
+
+# Vim
+*.swp
+*.swo
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
+# Archive files
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+# Security and sensitive files
+**/.aws/
+**/.ssh/
+**/secrets/
+**/private/
+**/*.env.example.filled
