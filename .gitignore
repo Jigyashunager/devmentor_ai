@@ -146,7 +146,6 @@ Thumbs.db
 
 # Next.js specific
 **/next-env.d.ts
-**/.next
 
 # React/Next.js
 **/react-app-env.d.ts
