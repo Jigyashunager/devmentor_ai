@@ -38,49 +38,39 @@ export default function CodeReviewPage() {
   const [metadata, setMetadata] = useState<any>(null);
 
   const handleSubmitReview = async () => {
-    console.log('Submitting code for review:', { code, language, title, description });
-    if (!code.trim()) return;
-    
-    setIsAnalyzing(true);
-    setError(null);
-    setReviewResult(null);
-    
-    try {
-      const response = await fetch('/api/review', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          code,
-          language,
-          title,
-          description
-        }),
-      });
-      
-      console.log('API response status:', response.status);
-      const result: APIResponse = await response.json();
-      console.log('API response:', result);
+  if (!code.trim()) return;
+  
+  setIsAnalyzing(true);
+  
+  try {
+    // Call your Node.js backend instead of Next.js API
+    const response = await fetch('http://localhost:5000/api/reviews', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${userToken}`, // You'll need to implement auth
+      },
+      body: JSON.stringify({
+        title,
+        description,
+        code,
+        language
+      }),
+    });
 
-      if (!response.ok) {
-        throw new Error(result.message || result.error || 'Failed to analyze code');
-      }
-
-      if (result.success && result.review) {
-        setReviewResult(result.review);
-        setMetadata(result.metadata);
-      } else {
-        throw new Error('No review content received');
-      }
-      
-    } catch (error: any) {
-      console.error('Error analyzing code:', error);
-      setError(error.message || 'Failed to analyze code. Please try again.');
-    } finally {
-      setIsAnalyzing(false);
+    if (!response.ok) {
+      throw new Error('Failed to analyze code');
     }
-  };
+
+    const result = await response.json();
+    setReviewResult(result.analysis); // Use the parsed analysis
+  } catch (error) {
+    console.error('Error analyzing code:', error);
+    alert('Failed to analyze code. Please try again.');
+  } finally {
+    setIsAnalyzing(false);
+  }
+};
 
   return (
     <div className="min-h-screen bg-gray-50">

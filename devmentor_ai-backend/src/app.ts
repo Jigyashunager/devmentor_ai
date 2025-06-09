@@ -3,10 +3,6 @@ import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import rateLimit from 'express-rate-limit';
-import dotenv from 'dotenv';
-
-// Load environment variables first
-dotenv.config();
 
 // Import routes
 import authRoutes from './routes/auth';
@@ -15,11 +11,11 @@ import userRoutes from './routes/users';
 import analyticsRoutes from './routes/analytics';
 
 // Import middleware
-import { errorHandler } from './middleware/errorHandler';
-import { notFound } from './middleware/notFound';
+import { errorHandler, notFound } from './middleware/errorHandler';
 
 const app = express();
-const PORT = process.env.PORT || 3001; // Changed to 3001 to avoid conflict
+
+console.log('🚀 Starting DevMentor AI Backend...');
 
 // Security middleware
 app.use(helmet());
@@ -55,16 +51,6 @@ app.get('/health', (req, res) => {
   });
 });
 
-// Root endpoint
-app.get('/', (req, res) => {
-  res.json({
-    message: 'Welcome to DevMentor AI Backend API',
-    status: 'running',
-    docs: '/api/docs',
-    health: '/health'
-  });
-});
-
 // API routes
 app.use('/api/auth', authRoutes);
 app.use('/api/reviews', reviewRoutes);
@@ -91,17 +77,19 @@ app.get('/api/docs', (req, res) => {
         'DELETE /api/reviews/:id': 'Delete review'
       },
       users: {
-        'GET /api/users/profile': 'Get user profile',
-        'PUT /api/users/profile': 'Update user profile',
         'GET /api/users/stats': 'Get user statistics'
       },
       analytics: {
         'GET /api/analytics/dashboard': 'Dashboard statistics',
-        'GET /api/analytics/progress': 'Progress over time',
-        'GET /api/analytics/insights': 'AI improvement insights'
+        'GET /api/analytics/progress': 'Progress over time'
       }
     }
   });
+});
+
+// 👇 Add this root route here
+app.get('/', (req, res) => {
+  res.send('🚀 DevMentor AI Backend is running. Visit /api/docs for API details.');
 });
 
 // 404 handler
@@ -110,15 +98,6 @@ app.use(notFound);
 // Error handling middleware (must be last)
 app.use(errorHandler);
 
-// Start the server - THIS WAS MISSING!
-if (require.main === module) {
-  app.listen(PORT, () => {
-    console.log(`🚀 DevMentor AI Backend is running on http://localhost:${PORT}`);
-    console.log(`📊 Health check: http://localhost:${PORT}/health`);
-    console.log(`📚 API docs: http://localhost:${PORT}/api/docs`);
-    console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
-    console.log(`🔗 CORS origin: ${process.env.FRONTEND_URL || 'http://localhost:3000'}`);
-  });
-}
+console.log('✅ Express app configured');
 
 export default app;
