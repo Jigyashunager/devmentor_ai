@@ -6,23 +6,59 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  name      String
-  password  String
-  role      String   @default("developer")
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  
-  // Relations
-  codeReviews CodeReview[]
-  
-  @@map("users")
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime?
+  image         String?
+  password      String?
+  role          String    @default("developer")
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  accounts     Account[]
+  sessions     Session[]
+  codeReviews  CodeReview[]
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
 }
 
 model CodeReview {
@@ -31,15 +67,56 @@ model CodeReview {
   description String?
   code        String
   language    String
-  status      String   @default("pending") // pending, completed, in_progress
-  feedback    String?
-  rating      Int?
+  status      String   @default("completed")
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  // User who submitted the review
+  authorId    String
+  author      User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  // AI Analysis Results
+  overallScore    Float
+  complexity      String
+  maintainability Int
+  performance     Int
+  security        Int
+  fullReview      String?  // Store complete AI analysis text
+
+  // Related issues and suggestions
+  issues      ReviewIssue[]
+  suggestions ReviewSuggestion[]
+  tags        ReviewTag[]
+}
+
+model ReviewIssue {
+  id           String @id @default(cuid())
+  type         String // bug, performance, security, style, maintainability
+  severity     String // low, medium, high, critical
+  line         Int
+  message      String
+  suggestion   String?
   
-  // Relations
-  userId      String
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  codeReviewId String
+  codeReview   CodeReview @relation(fields: [codeReviewId], references: [id], onDelete: Cascade)
+}
+
+model ReviewSuggestion {
+  id          String  @id @default(cuid())
+  type        String  // improvement, optimization, best-practice
+  message     String
+  codeExample String?
   
-  @@map("code_reviews")
+  codeReviewId String
+  codeReview   CodeReview @relation(fields: [codeReviewId], references: [id], onDelete: Cascade)
+}
+
+model ReviewTag {
+  id   String @id @default(cuid())
+  name String
+
+  codeReviewId String
+  codeReview   CodeReview @relation(fields: [codeReviewId], references: [id], onDelete: Cascade)
+
+  @@unique([codeReviewId, name])
 }
