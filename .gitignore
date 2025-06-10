@@ -22,7 +22,7 @@
 **/dist/
 **/build/
 **/out/
-**/.next/
+**/.next
 **/coverage/
 
 # Database files (SQLite)
